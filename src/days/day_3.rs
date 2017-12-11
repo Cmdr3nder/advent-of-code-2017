@@ -61,7 +61,7 @@ fn larger_than_input_spiral(input: u32) -> u32 {
 fn calc_local_sum(map: &HashMap<(i32, i32), u32>, location: (i32, i32)) -> u32 {
     let mut sum = 0u32;
 
-    for x_offset in -1i32..2i32 {
+    for x_offset in -1i32..2i32 { //In the future will probably be able to utilize the inclusive range syntax (ex: ..= or ...) when language feature becomes stable.
         for y_offset in -1i32..2i32 {
             let offset_location = (location.0 + x_offset, location.1 + y_offset);
 
