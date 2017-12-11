@@ -17,14 +17,15 @@ impl Cardinal {
         }
     }
 
-    pub fn calc_offset(&self, current_coords: (i32, i32)) -> (i32, i32) {
+    pub fn calc_offset(&self) -> (i32, i32) {
         let offset: (i32, i32) = match *self {
             Cardinal::North => (0, 1),
             Cardinal::South => (0, -1),
             Cardinal::East => (1, 0),
             Cardinal::West => (-1, 0)
         };
-        offset 
+
+        offset
     }
 }
 
