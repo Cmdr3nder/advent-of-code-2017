@@ -16,6 +16,12 @@ pub fn main() {
                  112	2429	1987	2129	2557	1827	477	100	78	634	352	1637	588	77	1624	2500\n\
                  514	218	209	185	197	137	393	555	588	569	710	537	48	309	519	138\n\
                  1567	3246	4194	151	3112	903	1575	134	150	4184	3718	4077	180	4307	4097	1705";
+
+    println!("Min-Max Checksum is {}", min_max_checksum(input));
+    println!("Even Dividers Checksum is {}", even_division_checksum(input));
+}
+
+fn min_max_checksum(input: &str) -> u32 {
     let mut sum = 0u32;
 
     for line in input.lines() {
@@ -39,5 +45,30 @@ pub fn main() {
         sum = sum + (max - min);
     }
 
-    println!("Checksum is {}", sum);
+    sum
+}
+
+fn even_division_checksum(input: &str) -> u32 {
+    let mut sum = 0u32;
+
+    for line in input.lines() {
+        let nums: Vec<u32> = line.split_whitespace().map(|s| s.parse::<u32>().unwrap()).collect();
+
+        for a_index in 0..nums.len() {
+            for b_index in (a_index + 1)..nums.len() {
+                let a = nums[a_index];
+                let b = nums[b_index];
+
+                if a > b && a % b == 0 {
+                    sum = sum + (a / b);
+                    break;
+                } else if b % a == 0 {
+                    sum = sum + (b / a);
+                    break;
+                }
+            }
+        }
+    }
+
+    sum
 }
