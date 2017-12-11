@@ -44,7 +44,7 @@ fn larger_than_input_spiral(input: u32) -> u32 {
     let mut location = (0i32, 0i32);
     let mut direction = Cardinal::East;
 
-    while *map.get(&location).unwrap() < input {
+    while *map.get(&location).unwrap() <= input {
         //Move
         let offset = direction.calc_offset();
         location = (location.0 + offset.0, location.1 + offset.1);
@@ -61,8 +61,8 @@ fn larger_than_input_spiral(input: u32) -> u32 {
 fn calc_local_sum(map: &HashMap<(i32, i32), u32>, location: (i32, i32)) -> u32 {
     let mut sum = 0u32;
 
-    for x_offset in -1i32..1i32 {
-        for y_offset in -1i32..1i32 {
+    for x_offset in -1i32..2i32 {
+        for y_offset in -1i32..2i32 {
             let offset_location = (location.0 + x_offset, location.1 + y_offset);
 
             if let Some(n) = map.get(&offset_location) {
