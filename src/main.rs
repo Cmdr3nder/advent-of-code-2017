@@ -7,28 +7,37 @@ use days::day_3::main as day_3;
 use days::day_4::main as day_4;
 
 use std::io;
+use std::env;
 
 fn main() {
     let day_fns = [day_1, day_2, day_3, day_4];
 
-    println!("Which day do you want to run? (1 - {})", day_fns.len());
-
-    let mut choice = String::new();
-    io::stdin().read_line(&mut choice).expect("Failed to read line.");
-
-    if choice.trim().len() == 0 {
+    if env::args().len() > 1 {
         day_fns[day_fns.len() - 1]();
         return;
     }
 
-    match choice.trim().parse::<usize>() {
-        Ok(c) => {
-            if c > 0 && c <= day_fns.len() {
-                day_fns[c - 1]();
-            } else {
-                println!("Woops invalid input, Out of Range");
+    loop {
+        println!("Which day do you want to run? (1 - {})", day_fns.len());
+
+        let mut choice = String::new();
+        io::stdin().read_line(&mut choice).expect("Failed to read line.");
+
+        if choice.trim().len() == 0 {
+            day_fns[day_fns.len() - 1]();
+        } else {
+            match choice.trim().parse::<usize>() {
+                Ok(c) => {
+                    if c > 0 && c <= day_fns.len() {
+                        day_fns[c - 1]();
+                    } else {
+                        println!("Woops invalid input, Out of Range");
+                    }
+                },
+                Err(e) => println!("Woops invalid input, {}", e)
             }
-        },
-        Err(e) => println!("Woops invalid input, {}", e)
+        }
+
+        println!("");
     }
 }
