@@ -7,12 +7,13 @@ use days::day_3::main as day_3;
 use days::day_4::main as day_4;
 use days::day_5::main as day_5;
 use days::day_6::main as day_6;
+use days::day_7::main as day_7;
 
 use std::io;
 use std::env;
 
 fn main() {
-    let day_fns = [day_1, day_2, day_3, day_4, day_5, day_6];
+    let day_fns = [day_1, day_2, day_3, day_4, day_5, day_6, day_7];
 
     if env::args().len() > 1 {
         day_fns[day_fns.len() - 1]();
