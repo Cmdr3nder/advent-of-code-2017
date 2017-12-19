@@ -8,7 +8,8 @@ pub fn main() {
     println!("-- Running Day 7 --");
     let input = &read_file_to_string("src/days/input/day_7.txt");
     let root = root_node_from_input(input);
-    println!("{}", root);
+    println!("Root is: {}", root);
+    println!("Target weight should be: {}", calculate_imbalance(&root, 0));
 }
 
 fn root_node_from_input<'a>(input: &'a str) -> TowerNode<'a> {
@@ -74,6 +75,43 @@ fn generate_node<'a>(current_line: &'a str, all_lines: &HashMap<&'a str, &'a str
     }
 }
 
+fn calculate_imbalance(node: &TowerNode, target_weight: u32) -> u32 {
+    let mut total_weight_counts: HashMap<u32, u32> = HashMap::new();
+    let mut last_weighed: HashMap<u32, &TowerNode> = HashMap::new();
+
+    for passenger in node.passengers.iter() {
+        let weight = passenger.total_weight();
+
+        if let Some(count) = total_weight_counts.remove(&weight) {
+            total_weight_counts.insert(weight, count + 1);
+        } else {
+            total_weight_counts.insert(weight, 1);
+        }
+
+        last_weighed.insert(weight, passenger);
+    }
+
+    let different_weight_count = total_weight_counts.keys().len();
+
+    if different_weight_count > 2 {
+        panic!("Too many different weights");
+    } else if different_weight_count == 2 {
+        let weight_to_find = total_weight_counts.keys().find(|weight| {
+            *total_weight_counts.get(weight).unwrap() == 1
+        }).unwrap();
+
+        let target_weight = *total_weight_counts.keys().find(|weight| {
+            *total_weight_counts.get(weight).unwrap() > 1
+        }).unwrap();
+
+        return calculate_imbalance(last_weighed.get(weight_to_find).unwrap(), target_weight);
+    } else if different_weight_count == 1 {
+        return target_weight - node.carried_weight();
+    } else {
+        panic!("No weights detected");
+    }
+}
+
 struct TowerNode<'a> {
     passengers: Vec<TowerNode<'a>>,
     weight: u32,
@@ -94,5 +132,21 @@ impl<'a> Display for TowerNode<'a> {
         } else {
             write!(f, "{} ({})", self.name, self.weight)
         }
+    }
+}
+
+impl<'a> TowerNode<'a> {
+    fn total_weight(&self) -> u32 {
+        self.weight + self.carried_weight()
+    }
+
+    fn carried_weight(&self) -> u32 {
+        let mut total = 0u32;
+
+        for passenger in self.passengers.iter() {
+            total = total + passenger.total_weight();
+        }
+
+        total
     }
 }
