@@ -41,7 +41,7 @@ fn substring_count(full_string: &str, substring: &str) -> usize {
 }
 
 #[test]
-fn substring_count_test() {
+fn test_substring_count() {
     assert_eq!(0, substring_count("Hello, World", "42"));
     assert_eq!(1, substring_count("42 Hello, World", "42"));
     assert_eq!(2, substring_count("42 Hello, World 42", "42"));
