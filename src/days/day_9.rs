@@ -5,10 +5,11 @@ use std::str::Chars;
 pub fn main() {
     println!("-- Running Day 9 --");
     let input = &read_file_to_string("src/days/input/day_9.txt");
-    let root = parse_groups(input);
+    let (root, garbage_count) = parse_groups(input);
     let total_score = root.score(1);
 
     println!("Total score is {}", total_score);
+    println!("Garbage count is {}", garbage_count);
 }
 
 struct Group {
@@ -27,7 +28,7 @@ impl Group {
     }
 }
 
-fn parse_groups(input: &str) -> Group {
+fn parse_groups(input: &str) -> (Group, u32) {
     let mut char_iter = input.chars();
 
     match char_iter.next() {
@@ -42,19 +43,22 @@ fn parse_groups(input: &str) -> Group {
     parse_group(&mut char_iter)
 }
 
-fn parse_group(char_iter: &mut Chars) -> Group {
+fn parse_group(char_iter: &mut Chars) -> (Group, u32) {
     let mut next = match char_iter.next() {
         Some(ch) => ch,
         None => panic!("Expected end of group, not end of input.")
     };
 
     let mut children = Vec::new();
+    let mut garbage_count = 0;
 
     while next != '}' {
         if next == '{' {
-            children.push(parse_group(char_iter));
+            let (group, count) = parse_group(char_iter);
+            children.push(group);
+            garbage_count = garbage_count + count;
         } else if next == '<' {
-            parse_garbage(char_iter);
+            garbage_count = garbage_count + parse_garbage(char_iter);
         } else if next == '!' {
             char_iter.next();
         } else if next == ',' || next.is_whitespace() {
@@ -69,25 +73,30 @@ fn parse_group(char_iter: &mut Chars) -> Group {
         }
     }
 
-    Group {
+    (Group {
         children
-    }
+    }, garbage_count)
 }
 
-fn parse_garbage(char_iter: &mut Chars) {
+fn parse_garbage(char_iter: &mut Chars) -> u32 {
+    let mut count = 0;
     let mut next = match char_iter.next() {
         Some(ch) => ch,
-        None => return
+        None => return count
     };
 
     while next != '>' {
         if next == '!' {
             char_iter.next();
+        } else {
+            count = count + 1;
         }
 
         next = match char_iter.next() {
             Some(ch) => ch,
-            None => return
+            None => return count
         };
     }
+
+    count
 }
