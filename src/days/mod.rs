@@ -10,8 +10,9 @@ mod day_9;
 mod day_10;
 mod day_11;
 mod day_12;
+mod day_13;
 
-pub const DAYS: [fn(); 12] = [
+pub const DAYS: [fn(); 13] = [
     day_1::main,
     day_2::main,
     day_3::main,
@@ -23,5 +24,6 @@ pub const DAYS: [fn(); 12] = [
     day_9::main,
     day_10::main,
     day_11::main,
-    day_12::main
+    day_12::main,
+    day_13::main
 ];
